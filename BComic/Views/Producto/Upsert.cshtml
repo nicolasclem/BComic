@@ -16,7 +16,7 @@
                  <h2 class="text-info">@titulo</h2>
             </div>
             <div class="row">
-                    <div class="col-6">
+                    <div class="col-8">
                         <div class="container">
                             <div class="row">
                                 <div class="col-mod-6">
@@ -71,22 +71,28 @@
                                         <option disabled selected>Seleccione un Tipo de Aplicacion</option>
                                     </select>
                                 </div>
-                            </div>
+                             </div>
                             <br/>
                             <div class="d-grid gap-2 d-md-block">
 
-                        @if(Model.Producto.Id != 0)
-                        {
-                            <button type="submit" class="btn btn-primary ">Actualizar</button>
-                        }
-                        else
-                        {
-                             <button type="submit" onClick="return validarImagen()" class="btn btn-primary ">Crear </button>
-                        }
-                        <a asp-controller="Producto" asp-action="Index" class="btn btn-success">Regresar</a>
+                                @if(Model.Producto.Id != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary ">Actualizar</button>
+                                }
+                                 else
+                                 {
+                                    <button type="submit" onClick="return validarImagen()" class="btn btn-primary ">Crear </button>
+                                 }
+                                 <a asp-controller="Producto" asp-action="Index" class="btn btn-success">Regresar</a>
+                            </div>
+                         </div>
                     </div>
-                        </div>
-                    </div>
+                    <div class="col-4">
+                @if (Model.Producto.Id != 0)
+                {
+                    <img src="@WC.ImagenRuta@Model.Producto.ImagenUrl" width="100%" style="border:1px solid #bbb; border-radius:4px"/>
+                }
+            </div>
             </div>
         
     </div>
