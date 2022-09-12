@@ -1,4 +1,5 @@
 using BComic.Datos;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders().AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>();      
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpContextAccessor();
@@ -33,10 +39,15 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
 
+
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
