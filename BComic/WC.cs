@@ -9,6 +9,8 @@
         public static string AdminRole = "Admin";
 
         public static string ClienteRole = "Cliente";
+
+        public static string EmailAdmin = "nicolasclementi@hotmail.com";
             
     }
 }

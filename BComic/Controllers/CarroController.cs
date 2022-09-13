@@ -3,8 +3,10 @@ using BComic.Models;
 using BComic.Models.ViewModels;
 using BComic.Utilidades;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text;
 
 namespace BComic.Controllers
 {
@@ -12,12 +14,16 @@ namespace BComic.Controllers
     public class CarroController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailSender _emailSender;
 
         [BindProperty]
         public ProductoUsuarioVM productoUsuarioVM { get; set; }
-        public CarroController(ApplicationDbContext db)
+        public CarroController(ApplicationDbContext db , IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
         {
             _db= db;
+            _webHostEnvironment= webHostEnvironment;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -65,13 +71,51 @@ namespace BComic.Controllers
             productoUsuarioVM = new ProductoUsuarioVM()
             {
                 UsuarioAplicacion = _db.UsuarioAplicacion.FirstOrDefault(u => u.Id == claim.Value),
-                ProductoLista = prodList
+                ProductoLista = prodList.ToList()
             };
 
             return View(productoUsuarioVM);
 
 
 
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Resumen")]
+        public async Task<IActionResult> ResumenPost(ProductoUsuarioVM producto)
+        {
+            var rutaTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                + "templates" + Path.DirectorySeparatorChar.ToString()
+                + "PlantillaOrden.html";
+            var subject = "Nueva Orden";
+            string HtmlBody = "";
+
+            using (StreamReader sr = System.IO.File.OpenText(rutaTemplate))
+            {
+                HtmlBody = sr.ReadToEnd();
+            }
+            StringBuilder productoListaSB = new StringBuilder(); 
+            foreach (var prod in productoUsuarioVM.ProductoLista)
+            {
+                productoListaSB.Append($"- Nombre: {prod.Nombre} <span style='font-size:14px'> (ID: {prod.Id}) </span> <br />");
+            }
+
+            string messageBody = string.Format(HtmlBody,
+                                                productoUsuarioVM.UsuarioAplicacion.NombreCompleto,
+                                                productoUsuarioVM.UsuarioAplicacion.Email,
+                                                productoUsuarioVM.UsuarioAplicacion.PhoneNumber,
+                                                productoListaSB.ToString());
+
+            await _emailSender.SendEmailAsync(WC.EmailAdmin,subject,messageBody);
+
+           return  RedirectToAction("Confirmacion");
+        }
+
+        public IActionResult Confirmacion()
+
+        {
+            HttpContext.Session.Clear();
+            return View();
         }
         public IActionResult Remover(int Id)
         {
