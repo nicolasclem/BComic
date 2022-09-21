@@ -1,5 +1,5 @@
-using BComic.Datos;
-using BComic.Utilidades;
+using BComic_AccesoDatos.Datos;
+using BComic_Utilidades;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;

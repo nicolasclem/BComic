@@ -1,9 +1,14 @@
-﻿using BComic.Datos;
-using BComic.Models;
+﻿using BComic_AccesoDatos.Datos;
+using BComic_Modelos;
+using BComic_Utilidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace BComic.Controllers
 {
+
+    [Authorize(Roles = WC.AdminRole)]
     public class CategoriaController : Controller
     {
         private readonly ApplicationDbContext _db;

@@ -23,4 +23,10 @@
     <Folder Include="wwwroot\imagenes\producto\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BComic_AccesoDatos\BComic_AccesoDatos.csproj" />
+    <ProjectReference Include="..\BComic_Modelos\BComic_Modelos.csproj" />
+    <ProjectReference Include="..\_Utilidades\Bcomic_Utilidades.csproj" />
+  </ItemGroup>
+
 </Project>

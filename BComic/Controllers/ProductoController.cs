@@ -1,13 +1,18 @@
-﻿using BComic.Datos;
-using BComic.Models;
-using BComic.Models.ViewModels;
+﻿using BComic_AccesoDatos.Datos;
+using BComic_Modelos;
+using BComic_Modelos.ViewModels;
+using BComic_Utilidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.IO;
 
 namespace BComic.Controllers
 {
+
+    [Authorize(Roles = WC.AdminRole)]
     public class ProductoController : Controller
     {
         private readonly ApplicationDbContext _db;
